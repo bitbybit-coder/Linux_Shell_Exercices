@@ -1,13 +1,14 @@
 #!/bin/bash
 
-echo "Starting automated configurations..."
+echo "              Starting automated configurations...              "
 sleep 2
 
 source /etc/os-release
 
 #Check which file format the system uses for package installation (.deb or .rpm)
 case "$ID" in
-    ubuntu|debian|linuxmint|pop)
+    ubuntu|debian|linuxmint|pop) 
+     
     echo "================================================================"
     echo "       YOUR SYSTEM  USES PACKAGE FILES IN THE .DEB FORMAT       "
     echo "================================================================"
@@ -68,6 +69,7 @@ case "$ID" in
     ;;
 
 fedora)
+
     echo "================================================================="
     echo "       YOUR SYSTEM  USES PACKAGE FILES IN THE .RPM FORMAT        "
     echo "================================================================="
@@ -77,9 +79,7 @@ fedora)
     echo "-----------------------------------------------------------------"
     #Starting system update
     sudo dnf upgrade --refresh -y
-
-   # sudo dnf install https://rpmfusion.org(rpm -E %fedora).noarch.rpm https://rpmfusion.org(rpm -E %fedora).noarch.rpm
-
+    
     #Installing some local packages
     sudo dnf install \
         @development-tools \
@@ -94,6 +94,11 @@ fedora)
         htop \
         hunspell-pt -y
 
+    # VIRTUALBOX
+    sudo dnf install kernel-devel kernel-headers gcc make perl elfutils-lebelf-devel -y
+    sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm -y
+    sudo dnf install VirtualBox kernel-devel-$(uname -r) -y
+
     echo "-----------------------------------------------------------------"
     echo "                Installation of external packages                "      
     echo "-----------------------------------------------------------------"
@@ -107,11 +112,6 @@ fedora)
     wget -O $HOME/Downloads/chrome.rpm https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm &&
     sudo dnf install $HOME/Downloads/chrome.rpm -y &&
     sudo rm $HOME/Downloads/chrome.rpm
-
-    # VIRTUALBOX
-    sudo wget -O /etc/yum.repos.d/virtualbox.repo https://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo &&
-    sudo dnf install kernel-devel kernel-headers dkms -y &&
-    sudo dnf install VirtualBox-7.2 -y
 
     #Final adjustments and removal of residual files
     sudo dnf check
